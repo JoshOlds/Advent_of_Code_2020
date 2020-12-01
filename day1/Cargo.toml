@@ -1,0 +1,10 @@
+[package]
+name = "day1"
+version = "0.1.0"
+authors = ["JoshOlds <joshua.olds@outlook.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+advent_libs = {path = "../advent_libs", version = "*"}
