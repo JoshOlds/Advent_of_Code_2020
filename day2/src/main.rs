@@ -7,10 +7,6 @@ struct Password {
     pub password: String,
 }
 
-// impl Password{
-//     fn new
-// }
-
 fn main() {
     println!("Advent of Code 2020 - Day 2");
     println!("---------------------------");
