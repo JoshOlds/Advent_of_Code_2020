@@ -139,7 +139,6 @@ fn main() {
     // Extra validation
     good_count = 0;
     for passport in passport_vec.iter() {
-        println!("{:?}", passport);
         if passport.byr < 1920 || passport.byr > 2002 {
             continue;
         }
