@@ -33,7 +33,7 @@ struct Passport {
     has_cid: bool,
 }
 fn main() {
-    println!("Advent of Code 2020 - Day 3");
+    println!("Advent of Code 2020 - Day 4");
     println!("---------------------------");
 
     // Read in puzzle input
@@ -41,14 +41,16 @@ fn main() {
     // Parse to vector of strings on newline
     let mut input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
 
-    // Convert data into passport objects
+    // Create a vector of passport objects
     let mut passport_vec: Vec<Passport> = Vec::new();
     // Construct a default passport object
     let mut passport: Passport = Default::default();
 
+    // Convert data into passport objects
     for line in input_vec.iter_mut() {
         // Save and reset the passport when we hit a newline
-        if line == "\r" {
+        // Input on windows finds a carriage return, linux has blank data! Eww!
+        if line == "\r" || line == "" {
             passport_vec.push(passport.clone());
             passport = Default::default();
             continue;
@@ -136,36 +138,37 @@ fn main() {
     // Part 2 ---------------------
     // Extra validation
     good_count = 0;
-    let mut bad_count = 0;
     for passport in passport_vec.iter() {
         println!("{:?}", passport);
-        let mut okay = true;
         if passport.byr < 1920 || passport.byr > 2002 {
-            okay = false;
+            continue;
         }
         if passport.iyr < 2010 || passport.iyr > 2020 {
-            okay = false;
+            continue;
         }
         if passport.eyr < 2020 || passport.eyr > 2030 {
-            okay = false;
+            continue;
         }
         if passport.hgt_unit == HeightUnit::Invalid {
-            okay = false;
+            continue;
         }
         if passport.hgt_unit == HeightUnit::Centimeters {
             if passport.hgt < 150 || passport.hgt > 193 {
-                okay = false;
+                continue;
             }
         }
         if passport.hgt_unit == HeightUnit::Inches {
             if passport.hgt < 59 || passport.hgt > 76 {
-                okay = false;
+                continue;
             }
+        }
+        if passport.hcl.len() != 7 {
+            continue;
         }
         for (index, letter) in passport.hcl.chars().enumerate() {
             if index == 0 {
                 if letter != '#' {
-                    okay = false;
+                    continue;
                 }
             }
             // This is really not-graceful, but typing this up was faster than being more creative
@@ -186,7 +189,7 @@ fn main() {
                 && letter != 'e'
                 && letter != 'f'
             {
-                okay = false;
+                continue;
             }
         }
         if passport.ecl != "amb"
@@ -197,30 +200,23 @@ fn main() {
             && passport.ecl != "hzl"
             && passport.ecl != "oth"
         {
-            okay = false;
+            continue;
         }
 
         if passport.pid.len() != 9 {
-            okay = false;
+            continue;
         }
+        // If it doesn't parse to an int, its not a number
         match passport.pid.parse::<i32>() {
             Ok(_v) => {}
-            Err(_e) => okay = false,
+            Err(_e) => continue,
         }
 
-        if okay {
-            good_count += 1;
-        } else {
-            bad_count += 1;
-        }
-        println!("Pass?: {:?}", okay);
+        good_count += 1;
     }
 
     println!(
-        "Good count with additional verification rules: {}, bad count: {}",
-        good_count, bad_count
+        "Good count with additional verification rules: {}",
+        good_count
     );
-
-    // println!("{:?}", input);
-    // println!("{:?}", input_vec);
 }
