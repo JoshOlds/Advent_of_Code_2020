@@ -170,24 +170,8 @@ fn main() {
                     continue;
                 }
             }
-            // This is really not-graceful, but typing this up was faster than being more creative
-            else if letter != '0'
-                && letter != '1'
-                && letter != '2'
-                && letter != '3'
-                && letter != '4'
-                && letter != '5'
-                && letter != '6'
-                && letter != '7'
-                && letter != '8'
-                && letter != '9'
-                && letter != 'a'
-                && letter != 'b'
-                && letter != 'c'
-                && letter != 'd'
-                && letter != 'e'
-                && letter != 'f'
-            {
+            // TYay standard library
+            else if letter.is_ascii_hexdigit() == false {
                 continue;
             }
         }
