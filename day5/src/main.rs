@@ -55,6 +55,7 @@ fn main() {
     println!("Part 1 -- Highest: {}", highest);
 
     // Part 2 -- Find the missing ID
+    // Sort the vector to make it easy to find the ID gap
     passes.sort_by_key(|k| k.id);
 
     // Iterate through and find the missing ID in the list
