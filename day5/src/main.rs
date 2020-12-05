@@ -10,16 +10,11 @@ fn main() {
     println!("---------------------------");
 
     // Read in puzzle input
-    let input = input_helpers::read_puzzle_input_to_string(5);
+    let mut input = input_helpers::read_puzzle_input_to_string(5);
+    // Strip out the carriage returns (on Windows)
+    input.retain(|c| c != '\r');
     // Parse to vector of strings on newline
-    let mut input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
-
-    // Strip carriage return if they exits (windows)
-    for line in input_vec.iter_mut() {
-        if line.ends_with("\r") {
-            line.pop();
-        }
-    }
+    let input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
 
     // Parse and calculate Boarding Passes
     let mut passes: Vec<BoardingPass> = Vec::new();
