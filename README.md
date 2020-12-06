@@ -8,7 +8,11 @@ I have been wanting to learn Rust for some time, and this seemed like the perfec
 
 ## Linux vs. Windows
 
-Uh oh! I noticed that the puzzle inputs read into Rust differently between Windows and Linux... Linux seems to have no trailing carriage returns, when Windows reads in a **'\r'** for all new lines. This being said, some puzzles may not work on Windows! I'll be attempting to fix this to be portable soon! 
+~~Uh oh! I noticed that the puzzle inputs read into Rust differently between Windows and Linux... Linux seems to have no trailing carriage returns, when Windows reads in a **'\r'** for all new lines. This being said, some puzzles may not work on Windows! I'll be attempting to fix this to be portable soon!~~
+
+This issue has been resolved by filtering '\r' out of the input text once read into Rust.
+
+---
 
 ## How to Run
 
