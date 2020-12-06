@@ -12,7 +12,9 @@ fn main() {
     println!("---------------------------");
 
     // Read in puzzle input
-    let input = input_helpers::read_puzzle_input_to_string(2);
+    let mut input = input_helpers::read_puzzle_input_to_string(2);
+    // Strip out the carriage returns (on Windows)
+    input.retain(|c| c != '\r');
     // Parse to vector of strings on newline
     let input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
 

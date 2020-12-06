@@ -5,7 +5,9 @@ fn main() {
     println!("---------------------------");
 
     // Read puzzle input
-    let input_str = input_helpers::read_puzzle_input_to_string(1);
+    let mut input_str = input_helpers::read_puzzle_input_to_string(1);
+    // Strip out the carriage returns (on Windows)
+    input_str.retain(|c| c != '\r');
     // Convert to vector of i32
     let input_vec: Vec<i32> = input_helpers::split_string_to_vector(&input_str, "\n");
 
