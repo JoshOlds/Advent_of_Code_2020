@@ -171,7 +171,7 @@ fn get_memory_from_input_vec(vec: &Vec<String>) -> ByteMemory {
 }
 
 fn main() {
-    println!("Advent of Code 2020 - Day 4");
+    println!("Advent of Code 2020 - Day 8");
     println!("---------------------------");
 
     // Read in puzzle input
