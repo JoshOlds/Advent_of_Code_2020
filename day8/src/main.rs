@@ -1,10 +1,10 @@
 // This approach to day8 was MASSIVELY overkill. I wanted to delve into Rust's Trait system and learn more about dynamic types.
-// I worked myself into a corner trying to use Traits like class inheritance. This mistake forced me to rethink data structures and 
+// I worked myself into a corner trying to use Traits like class inheritance. This mistake forced me to rethink data structures and
 // approach today's challenge in a way that was different than how I would in another language (like C++).
 // Overall, learned a lot, but took WAY too long.
 
 use advent_libs::input_helpers;
-use byte_codes::{ByteCode, ByteCodeName};
+use byte_codes::ByteCodeName;
 
 type ByteMemory = Vec<Box<dyn byte_codes::ByteCode>>;
 
@@ -29,7 +29,7 @@ impl CPU {
         }
 
         let instruction = &mut memory[self.ip as usize];
-        let result = instruction.execute(self)?; // '?' operator propagates errors up
+        instruction.execute(self)?; // '?' operator propagates errors up
         Ok(self.ip)
     }
 }
@@ -164,9 +164,7 @@ fn get_memory_from_input_vec(vec: &Vec<String>) -> ByteMemory {
             "acc" => mem.push(Box::new(byte_codes::Acc::new(value))),
             "nop" => mem.push(Box::new(byte_codes::NoOp::new(value))),
             "jmp" => mem.push(Box::new(byte_codes::Jmp::new(value))),
-            _ => {
-                panic!("Unknown operation value: {}", op)
-            }
+            _ => panic!("Unknown operation value: {}", op),
         }
     }
     mem
@@ -181,7 +179,7 @@ fn main() {
     // Strip out the carriage returns (on Windows)
     input.retain(|c| c != '\r');
     // Parse to vector of strings on newline
-    let mut input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
+    let input_vec: Vec<String> = input_helpers::split_string_to_vector(&input, "\n");
 
     // Create CPU and Memory
     let mut cpu = CPU::new();
