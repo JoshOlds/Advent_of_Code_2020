@@ -16,7 +16,7 @@
             "name": "Linux Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/day4/target/debug/day4",
+            "program": "${workspaceRoot}/day12/target/debug/day12",
             "args": [],
             "cwd": "${workspaceRoot}"
         }
