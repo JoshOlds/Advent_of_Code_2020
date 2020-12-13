@@ -1,7 +1,14 @@
 use advent_libs::input_helpers;
 
-// PART TWO WAS A JERK
+use crossterm::{
+    cursor,
+    style::{self, Colorize},
+    terminal, QueueableCommand, Result,
+};
 
+use std::io::Write;
+
+/// Seating enum
 #[derive(Debug, PartialEq, Copy, Clone)]
 enum Seating {
     Floor,
@@ -9,6 +16,48 @@ enum Seating {
     OccupiedSeat,
 }
 
+// Display functions
+pub fn setup_terminal(h_res: usize, v_res: usize) -> Result<()> {
+    std::io::stdout()
+        .queue(terminal::SetSize(h_res as u16, v_res as u16))?
+        .queue(cursor::DisableBlinking)?
+        .queue(cursor::Hide)?
+        .queue(terminal::Clear(terminal::ClearType::All))?
+        .queue(cursor::MoveTo(0, 0))?;
+
+    std::io::stdout().flush()?;
+    Ok(())
+}
+
+// Draws a given 2D seating vector to terminal
+fn draw(vec: &Vec<Vec<Seating>>) -> Result<()> {
+    let mut stdout = std::io::stdout();
+    // Align cursor to start
+    stdout.queue(cursor::MoveTo(0, 0))?;
+    stdout.queue(terminal::Clear(terminal::ClearType::All))?;
+
+    for row in vec.iter() {
+        for seat in row.iter() {
+            match seat {
+                Seating::Floor => {
+                    stdout.queue(style::PrintStyledContent(style::style(".").grey()))?;
+                }
+                Seating::OccupiedSeat => {
+                    stdout.queue(style::PrintStyledContent(style::style("#").red()))?;
+                }
+                Seating::OpenSeat => {
+                    stdout.queue(style::PrintStyledContent(style::style("L").green()))?;
+                }
+            }
+        }
+        stdout.queue(cursor::MoveToColumn(0))?;
+        stdout.queue(cursor::MoveDown(1))?;
+    }
+    stdout.flush()?;
+    Ok(())
+}
+
+/// Counts the number of occupied seats in a given 2D vector of seating
 fn count_seating(seating_vec: &Vec<Vec<Seating>>) -> usize {
     let mut count = 0;
     for row in seating_vec.iter() {
@@ -22,6 +71,7 @@ fn count_seating(seating_vec: &Vec<Vec<Seating>>) -> usize {
     count
 }
 
+// Runs the Part 1 logic across a 2D vector of seating, once
 fn run_once(seating_vec: &mut Vec<Vec<Seating>>) -> Vec<Vec<Seating>> {
     let mut temp_seating_vec = seating_vec.clone();
     let width = seating_vec[0].len();
@@ -96,7 +146,7 @@ fn run_once(seating_vec: &mut Vec<Vec<Seating>>) -> Vec<Vec<Seating>> {
     temp_seating_vec
 }
 
-// Part 2 funcs
+/// Search functions
 fn search_left(vec: &Vec<Vec<Seating>>, y: usize, x: usize) -> bool {
     let mut x = x;
     while x > 0 {
@@ -209,6 +259,8 @@ fn search_down_right(vec: &Vec<Vec<Seating>>, y: usize, x: usize) -> bool {
     }
     return false;
 }
+
+/// Runs the part 2 logic on a 2D vector of seating, once
 fn run_part2_once(seating_vec: &mut Vec<Vec<Seating>>) -> Vec<Vec<Seating>> {
     let mut temp_seating_vec = seating_vec.clone();
 
@@ -282,27 +334,41 @@ fn main() {
     // Copy for part 2
     let mut vec_2 = vec.clone();
 
+    // Setup display
+    let width = vec[0].len();
+    let height = vec.len();
+    setup_terminal(width, height).unwrap();
+
     // Part 1 -----------
     let mut same = false;
     let mut run_count = 0;
     while same == false {
+        draw(&vec).unwrap();
         let next_vec = run_once(&mut vec);
         same = next_vec == vec;
         vec = next_vec;
         run_count += 1;
+        std::thread::sleep(std::time::Duration::from_millis(250));
     }
+    draw(&vec).unwrap();
+    println!();
     println!("Part 1 - Cycles until stabilization: {}", run_count);
     println!("Stabilized occupied count: {}", count_seating(&vec));
+    std::thread::sleep(std::time::Duration::from_millis(1000));
 
     // Part 2 -----------
     let mut same = false;
     let mut run_count = 0;
     while same == false {
+        draw(&vec_2).unwrap();
         let next_vec = run_part2_once(&mut vec_2);
         same = next_vec == vec_2;
         vec_2 = next_vec;
         run_count += 1;
+        std::thread::sleep(std::time::Duration::from_millis(250));
     }
+    draw(&vec_2).unwrap();
+    println!();
     println!("Part 2 - Cycles until stabilization: {}", run_count);
     println!("Stabilized occupied count: {}", count_seating(&vec_2));
 }
